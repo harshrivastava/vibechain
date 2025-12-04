@@ -14,6 +14,35 @@ Built for hackathons, optimized for real-world supply chain transparency.
 
 ---
 
+## 📸 Screenshots
+
+<details>
+<summary>Click to view application screenshots</summary>
+
+### Landing Page
+![Landing Page](./screenshots/landing-page.png)
+*Clean, professional homepage with clear value proposition*
+
+### Vendor Dashboard
+![Vendor Dashboard](./screenshots/vendor-dashboard.png)
+*Register products with MetaMask signature - no gas fees required*
+
+### MetaMask Signature
+![MetaMask Signature](./screenshots/metamask-signature.png)
+*Secure cryptographic signing with MetaMask wallet*
+
+### QR Code Scanning
+![QR Scanner](./screenshots/verify-scan.png)
+*Instant product verification via QR code scanning*
+
+### Verification Success
+![Verification Success](./screenshots/verify-success.png)
+*Complete product information with blockchain verification*
+
+</details>
+
+---
+
 ## ✨ Features
 
 - 🔐 **MetaMask Signature Authentication** - Cryptographically sign products without gas fees
