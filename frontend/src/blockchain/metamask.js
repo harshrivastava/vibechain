@@ -139,7 +139,7 @@ export async function addSepoliaNetwork() {
                     symbol: "ETH",
                     decimals: 18
                 },
-                rpcUrls: ["https://sepolia.infura.io/v3/"],
+                rpcUrls: ["https://sepolia.infura.io/v3/0bf9c4dd17ec41aabdd6791f6c856066"],
                 blockExplorerUrls: ["https://sepolia.etherscan.io"]
             }]
         });

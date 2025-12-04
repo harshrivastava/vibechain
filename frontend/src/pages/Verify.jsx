@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Html5QrcodeScanner } from "html5-qrcode";
-import { BrowserProvider } from "ethers";
 import SupplyChainTimeline from "../components/SupplyChainTimeline";
 import DashboardCard from "../components/DashboardCard";
 import GlowButton from "../components/GlowButton";
-import { getProductStagesFromChain } from "../blockchain/blockchainService";
 import "./Verify.css";
 
 export default function Verify() {
@@ -65,22 +63,7 @@ export default function Verify() {
         try {
             const res = await axios.get(`http://localhost:4000/api/products/hash/${productHash}`);
             setProduct(res.data);
-
-            if (res.data.metadata && res.data.metadata.blockchainId) {
-                let provider;
-                if (window.ethereum) {
-                    provider = new BrowserProvider(window.ethereum);
-                } else {
-                    console.warn("No crypto wallet found. Blockchain verification might fail.");
-                }
-
-                if (provider) {
-                    const chainStages = await getProductStagesFromChain(res.data.metadata.blockchainId, provider);
-                    setStages(chainStages);
-                }
-            } else {
-                console.log("No blockchain ID found in metadata.");
-            }
+            console.log("✅ Product verified:", res.data);
         } catch (err) {
             console.error(err);
             setError("Product not found or verification failed.");

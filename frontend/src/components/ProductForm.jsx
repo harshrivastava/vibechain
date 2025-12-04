@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { keccak256, toUtf8Bytes } from "ethers"; // hash generator
-
-import { addProductOnChain } from "../blockchain/blockchainService";
+import { createSecureProductRecord } from "../blockchain/blockchainService";
 
 export default function ProductForm({ wallet, onSubmit }) {
   const [product, setProduct] = useState({
@@ -24,31 +22,35 @@ export default function ProductForm({ wallet, onSubmit }) {
     setLoading(true);
 
     try {
-      // Convert product data to JSON string
-      const productString = JSON.stringify(product);
+      // Generate secure product record with MetaMask signature
+      console.log("🔐 Creating secure product record with MetaMask signature...");
+      const record = await createSecureProductRecord(product, wallet.address, wallet.signer);
+      console.log("✅ Product Signed:", record);
 
-      // Generate hash (unique ID on blockchain)
-      const hash = keccak256(toUtf8Bytes(productString));
-      console.log("Generated Hash:", hash);
-
-      // 1. Add to Blockchain (Real)
-      // We use 'batch' as the SKU
-      const txResult = await addProductOnChain(hash, product.batch, wallet.signer);
-      console.log("Blockchain Tx:", txResult);
-
-      // 2. Pass to parent (App.jsx) -> Saves to Backend
-      // We pass the hash as the productIdOnChain (for URL lookup)
-      // And we save the real numeric ID in metadata
+      // Pass to parent (App.jsx) -> Saves to Backend
       await onSubmit({
         ...product,
-        hash,
-        txHash: txResult.txHash,
-        blockchainId: txResult.productId
+        hash: record.hash,
+        signature: record.signature,
+        timestamp: record.timestamp,
+        vendorAddress: record.vendor
       });
 
     } catch (error) {
-      console.error("Error in product creation flow:", error);
-      alert("Failed to create product on chain");
+      console.error("❌ Error in product creation:", error);
+
+      // Better error messages
+      let errorMessage = "Failed to create product";
+
+      if (error.code === 4001 || error.code === "ACTION_REJECTED") {
+        errorMessage = "Signature rejected by user";
+      } else if (error.message?.includes("user rejected")) {
+        errorMessage = "Signature rejected by user";
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
+      }
+
+      alert(`❌ ${errorMessage}\n\nCheck console for details.`);
     } finally {
       setLoading(false);
     }
@@ -99,7 +101,7 @@ export default function ProductForm({ wallet, onSubmit }) {
           cursor: loading ? "not-allowed" : "pointer",
         }}
       >
-        {loading ? "Processing on Blockchain..." : "Generate & Save"}
+        {loading ? "Requesting Signature..." : "Sign & Save Product"}
       </button>
     </form>
   );

@@ -1,39 +1,39 @@
-import { getContract } from "./contractConfig";
+import { keccak256, toUtf8Bytes } from "ethers";
 
 /**
- * Adds a product to the blockchain
- * @param {string} hash - The product's SHA256 hash
- * @param {string} sku - The product's SKU/Batch
- * @param {ethers.Signer} signer - The wallet signer
- * @returns {Promise<{productId: number, txHash: string}>}
+ * Create a secure product record with MetaMask signature
+ * @param {Object} productData - Product information
+ * @param {string} vendorAddress - Vendor's wallet address
+ * @param {ethers.Signer} signer - MetaMask signer
+ * @returns {Promise<{hash: string, signature: string, timestamp: number, vendor: string}>}
  */
-export async function addProductOnChain(hash, sku, signer) {
-    console.log("🔗 Connecting to Blockchain...");
-    const contract = getContract(signer);
+export async function createSecureProductRecord(productData, vendorAddress, signer) {
+    console.log("🔐 Generating product hash...");
+
+    // Generate unique hash from product data
+    const productString = JSON.stringify(productData);
+    const hash = keccak256(toUtf8Bytes(productString));
+
+    console.log("✍️ Requesting MetaMask signature...");
+
+    // Create message to sign
+    const message = `VibeChain Product Registration\n\nProduct Hash: ${hash}\nVendor: ${vendorAddress}\nTimestamp: ${Date.now()}`;
 
     try {
-        const tx = await contract.addProduct(sku, hash);
-        console.log("⏳ Transaction sent:", tx.hash);
+        // Request signature from MetaMask
+        const signature = await signer.signMessage(message);
 
-        const receipt = await tx.wait();
-        console.log("✅ Transaction mined:", receipt.hash);
-
-        // Find ProductAdded event
-        const event = receipt.logs
-            .map(log => {
-                try { return contract.interface.parseLog(log); }
-                catch (e) { return null; }
-            })
-            .find(parsed => parsed && parsed.name === "ProductAdded");
-
-        const productId = event ? Number(event.args.productId) : null;
+        console.log("✅ Product signed successfully!");
 
         return {
-            productId: productId,
-            txHash: receipt.hash
+            hash,
+            signature,
+            timestamp: Date.now(),
+            vendor: vendorAddress,
+            message
         };
     } catch (error) {
-        console.error("Blockchain Error:", error);
+        console.error("❌ Signature error:", error);
         throw error;
     }
 }
@@ -45,34 +45,6 @@ export async function addProductOnChain(hash, sku, signer) {
  * @returns {Promise<Array>}
  */
 export async function getProductStagesFromChain(productId, provider) {
-    if (!productId) return [];
-
-    const contract = getContract(provider);
-    const stages = [];
-
-    try {
-        // 1. Get Basic Info (Creation Stage)
-        const basicInfo = await contract.getProductBasic(productId);
-        stages.push({
-            title: "Product Registered",
-            date: new Date(Number(basicInfo.createdAt) * 1000).toLocaleDateString(),
-            description: `Registered by Vendor: ${basicInfo.vendor.slice(0, 6)}...`
-        });
-
-        // 2. Get Updates
-        const updatesCount = Number(basicInfo.updatesCount);
-        for (let i = 0; i < updatesCount; i++) {
-            const update = await contract.getProductUpdate(productId, i);
-            stages.push({
-                title: "Product Updated",
-                date: new Date(Number(update.timestamp) * 1000).toLocaleDateString(),
-                description: update.note || "Supply Chain Update"
-            });
-        }
-
-        return stages;
-    } catch (error) {
-        console.error("Error fetching stages:", error);
-        return [];
-    }
+    // This function can be implemented later for blockchain integration
+    return [];
 }
