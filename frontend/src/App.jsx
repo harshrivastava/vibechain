@@ -13,16 +13,18 @@ function App() {
   const showNavbar = true;
 
   return (
-    <>
+    <div className="app-container">
       {showNavbar && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/dashboard" element={<VendorDashboard />} />
-        <Route path="/verify" element={<Verify />} />
-      </Routes>
-    </>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/dashboard" element={<VendorDashboard />} />
+          <Route path="/verify" element={<Verify />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 

@@ -1,41 +1,52 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { Shield, Check, TrendingUp, Users, Package, Zap } from 'lucide-react';
+import './Landing.css';
 
 export default function Landing() {
     return (
         <div className="landing-page">
             {/* Hero Section */}
             <section className="hero-section">
-                <div className="hero-content">
-                    <div className="hero-badge">🔗 Powered by Blockchain</div>
-                    <h1 className="hero-title">
-                        Verify Product Authenticity
-                        <br />
-                        <span className="gradient-text">With Blockchain Technology</span>
-                    </h1>
-                    <p className="hero-subtitle">
-                        VibeChain uses Ethereum blockchain to create immutable records of product authenticity.
-                        Scan QR codes to instantly verify genuine products and track their supply chain journey.
-                    </p>
-                    <div className="hero-buttons">
-                        <Link to="/dashboard" className="btn btn-primary">
-                            Get Started →
-                        </Link>
-                        <Link to="/how-it-works" className="btn btn-secondary">
-                            Learn More
-                        </Link>
-                    </div>
-                    <div className="hero-stats">
-                        <div className="stat">
-                            <div className="stat-number">100%</div>
-                            <div className="stat-label">Secure</div>
+                <div className="container">
+                    <div className="hero-content">
+                        <div className="hero-badge">
+                            <Shield size={16} />
+                            <span>Blockchain-Powered Authentication</span>
                         </div>
-                        <div className="stat">
-                            <div className="stat-number">∞</div>
-                            <div className="stat-label">Immutable</div>
+
+                        <h1 className="hero-title">
+                            Secure Your Products with VibeChain
+                        </h1>
+
+                        <p className="hero-subtitle">
+                            Eliminate counterfeits and build consumer trust through immutable blockchain technology.
+                            Every product deserves a verifiable history.
+                        </p>
+
+                        <div className="hero-buttons">
+                            <Link to="/dashboard" className="btn btn-primary btn-lg">
+                                Get Started
+                            </Link>
+                            <Link to="/verify" className="btn btn-secondary btn-lg">
+                                Verify Product
+                            </Link>
                         </div>
-                        <div className="stat">
-                            <div className="stat-number">⚡</div>
-                            <div className="stat-label">Instant</div>
+
+                        <div className="hero-stats">
+                            <div className="stat-item">
+                                <div className="stat-number">10,000+</div>
+                                <div className="stat-label">Products Verified</div>
+                            </div>
+                            <div className="stat-divider"></div>
+                            <div className="stat-item">
+                                <div className="stat-number">99.9%</div>
+                                <div className="stat-label">Accuracy Rate</div>
+                            </div>
+                            <div className="stat-divider"></div>
+                            <div className="stat-item">
+                                <div className="stat-number">500+</div>
+                                <div className="stat-label">Active Vendors</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,82 +54,76 @@ export default function Landing() {
 
             {/* Features Section */}
             <section className="features-section">
-                <div className="section-header">
-                    <h2>Why Choose VibeChain?</h2>
-                    <p>Cutting-edge technology meets simplicity</p>
-                </div>
-                <div className="features-grid">
-                    <div className="feature-card glass-card">
-                        <div className="feature-icon">🔒</div>
-                        <h3>Blockchain Security</h3>
-                        <p>
-                            Every product is registered on the Ethereum blockchain, creating an
-                            immutable and tamper-proof record of authenticity.
-                        </p>
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Why Choose VibeChain</h2>
+                        <p>Next-generation product authentication powered by blockchain technology</p>
                     </div>
-                    <div className="feature-card glass-card">
-                        <div className="feature-icon">📱</div>
-                        <h3>QR Code Verification</h3>
-                        <p>
-                            Customers can instantly verify products by scanning QR codes with
-                            their smartphones. No app installation required.
-                        </p>
-                    </div>
-                    <div className="feature-card glass-card">
-                        <div className="feature-icon">🚚</div>
-                        <h3>Supply Chain Tracking</h3>
-                        <p>
-                            Track the complete journey of your products from manufacturing to
-                            delivery with transparent blockchain records.
-                        </p>
-                    </div>
-                    <div className="feature-card glass-card">
-                        <div className="feature-icon">⚡</div>
-                        <h3>Real-Time Updates</h3>
-                        <p>
-                            Add supply chain updates instantly. Every change is recorded on the
-                            blockchain with timestamps and verifiable proof.
-                        </p>
-                    </div>
-                </div>
-            </section>
 
-            {/* How It Works Section */}
-            <section className="how-it-works-section">
-                <div className="section-header">
-                    <h2>How It Works</h2>
-                    <p>Three simple steps to secure your products</p>
-                </div>
-                <div className="steps-container">
-                    <div className="step">
-                        <div className="step-number">1</div>
-                        <div className="step-content glass-card">
-                            <h3>Register Product</h3>
+                    <div className="features-grid">
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Shield size={24} />
+                            </div>
+                            <h3>Immutable Records</h3>
                             <p>
-                                Connect your wallet and register your product on the blockchain.
-                                Add details like name, batch number, and description.
+                                Every product registration is permanently stored on the Ethereum blockchain,
+                                making it impossible to forge or tamper with.
                             </p>
                         </div>
-                    </div>
-                    <div className="step-arrow">→</div>
-                    <div className="step">
-                        <div className="step-number">2</div>
-                        <div className="step-content glass-card">
-                            <h3>Generate QR Code</h3>
+
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Zap size={24} />
+                            </div>
+                            <h3>Instant Verification</h3>
                             <p>
-                                Receive a unique QR code linked to your product's blockchain record.
-                                Print and attach it to your product packaging.
+                                Scan QR codes with any smartphone camera to verify authenticity in seconds.
+                                No app installation required.
                             </p>
                         </div>
-                    </div>
-                    <div className="step-arrow">→</div>
-                    <div className="step">
-                        <div className="step-number">3</div>
-                        <div className="step-content glass-card">
-                            <h3>Verify Authenticity</h3>
+
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <TrendingUp size={24} />
+                            </div>
+                            <h3>Full Transparency</h3>
                             <p>
-                                Customers scan the QR code to instantly verify authenticity and
-                                view the complete supply chain history.
+                                Track complete supply chain history from manufacturing to delivery.
+                                Build trust with complete visibility.
+                            </p>
+                        </div>
+
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Package size={24} />
+                            </div>
+                            <h3>Cost Effective</h3>
+                            <p>
+                                Affordable blockchain solution for businesses of all sizes.
+                                Pay only for what you use.
+                            </p>
+                        </div>
+
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Check size={24} />
+                            </div>
+                            <h3>Easy Integration</h3>
+                            <p>
+                                Simple API and dashboard interface. Get started in minutes,
+                                not months.
+                            </p>
+                        </div>
+
+                        <div className="feature-card">
+                            <div className="feature-icon">
+                                <Users size={24} />
+                            </div>
+                            <h3>Enterprise Security</h3>
+                            <p>
+                                Bank-level encryption and security. Your data and products
+                                are always protected.
                             </p>
                         </div>
                     </div>
@@ -127,45 +132,58 @@ export default function Landing() {
 
             {/* CTA Section */}
             <section className="cta-section">
-                <div className="cta-content glass-card">
-                    <h2>Ready to Secure Your Products?</h2>
-                    <p>Join the blockchain revolution and protect your brand from counterfeits</p>
-                    <Link to="/dashboard" className="btn btn-primary btn-large">
-                        Start Now - It's Free →
-                    </Link>
+                <div className="container">
+                    <div className="cta-card">
+                        <h2>Ready to Eliminate Counterfeits?</h2>
+                        <p>Join hundreds of vendors already protecting their products with VibeChain</p>
+                        <div className="cta-buttons">
+                            <Link to="/dashboard" className="btn btn-primary btn-lg">
+                                Get Started Free
+                            </Link>
+                            <Link to="/how-it-works" className="btn btn-secondary btn-lg">
+                                Learn More
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* Footer */}
             <footer className="landing-footer">
-                <div className="footer-content">
-                    <div className="footer-brand">
-                        <h3>VibeChain</h3>
-                        <p>Blockchain-powered product authentication</p>
+                <div className="container">
+                    <div className="footer-content">
+                        <div className="footer-brand">
+                            <h3>VibeChain</h3>
+                            <p>Blockchain-powered product authentication</p>
+                        </div>
+
+                        <div className="footer-links">
+                            <div className="footer-column">
+                                <h4>Product</h4>
+                                <Link to="/dashboard">Dashboard</Link>
+                                <Link to="/verify">Verify</Link>
+                                <Link to="/how-it-works">How It Works</Link>
+                            </div>
+
+                            <div className="footer-column">
+                                <h4>Company</h4>
+                                <Link to="/about">About</Link>
+                                <a href="#contact">Contact</a>
+                                <a href="#careers">Careers</a>
+                            </div>
+
+                            <div className="footer-column">
+                                <h4>Resources</h4>
+                                <a href="#docs">Documentation</a>
+                                <a href="#api">API</a>
+                                <a href="#support">Support</a>
+                            </div>
+                        </div>
                     </div>
-                    <div className="footer-links">
-                        <div className="footer-column">
-                            <h4>Product</h4>
-                            <Link to="/how-it-works">How It Works</Link>
-                            <Link to="/about">About Us</Link>
-                            <Link to="/verify">Verify Product</Link>
-                        </div>
-                        <div className="footer-column">
-                            <h4>Resources</h4>
-                            <a href="#docs">Documentation</a>
-                            <a href="#support">Support</a>
-                            <a href="#faq">FAQ</a>
-                        </div>
-                        <div className="footer-column">
-                            <h4>Connect</h4>
-                            <a href="#twitter">Twitter</a>
-                            <a href="#github">GitHub</a>
-                            <a href="#discord">Discord</a>
-                        </div>
+
+                    <div className="footer-bottom">
+                        <p>© 2024 VibeChain. Built on Ethereum.</p>
                     </div>
-                </div>
-                <div className="footer-bottom">
-                    <p>© 2024 VibeChain. Built on Ethereum Sepolia Testnet.</p>
                 </div>
             </footer>
         </div>

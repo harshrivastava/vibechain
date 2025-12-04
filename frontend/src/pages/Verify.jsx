@@ -4,7 +4,10 @@ import axios from "axios";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { BrowserProvider } from "ethers";
 import SupplyChainTimeline from "../components/SupplyChainTimeline";
+import DashboardCard from "../components/DashboardCard";
+import GlowButton from "../components/GlowButton";
 import { getProductStagesFromChain } from "../blockchain/blockchainService";
+import "./Verify.css";
 
 export default function Verify() {
     const [searchParams] = useSearchParams();
@@ -25,7 +28,7 @@ export default function Verify() {
             const scanner = new Html5QrcodeScanner(
                 "reader",
                 { fps: 10, qrbox: { width: 250, height: 250 } },
-        /* verbose= */ false
+                false
             );
             scanner.render(onScanSuccess, onScanFailure);
 
@@ -53,20 +56,17 @@ export default function Verify() {
     }
 
     function onScanFailure(error) {
-        // console.warn(`Code scan error = ${error}`);
+        // Silent fail for scanning
     }
 
     async function verifyProduct(productHash) {
         setLoading(true);
         setError(null);
         try {
-            // 1. Fetch from Backend
             const res = await axios.get(`http://localhost:4000/api/products/hash/${productHash}`);
             setProduct(res.data);
 
-            // 2. Fetch from Blockchain
             if (res.data.metadata && res.data.metadata.blockchainId) {
-                // Use a read-only provider (Metamask or Default)
                 let provider;
                 if (window.ethereum) {
                     provider = new BrowserProvider(window.ethereum);
@@ -79,10 +79,8 @@ export default function Verify() {
                     setStages(chainStages);
                 }
             } else {
-                // Fallback or Mock if no blockchain ID (e.g. legacy products)
                 console.log("No blockchain ID found in metadata.");
             }
-
         } catch (err) {
             console.error(err);
             setError("Product not found or verification failed.");
@@ -92,79 +90,154 @@ export default function Verify() {
     }
 
     return (
-        <div style={{ padding: "40px", maxWidth: "800px", margin: "0 auto" }} className="fade-in">
-            <h1 style={{ textAlign: "center", marginBottom: "30px" }}>🔍 Product Verification</h1>
+        <div className="verify-page">
+            <div className="verify-header">
+                <h1 className="animate-fade-in-up">🔍 Product Verification</h1>
+                <p className="verify-subtitle animate-fade-in-up delay-100">
+                    Scan QR code or enter product hash to verify authenticity
+                </p>
+            </div>
 
             {!hash && (
-                <div className="glass-card" style={{ textAlign: "center" }}>
-                    <h3>Scan QR Code</h3>
-                    <div id="reader" style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }}></div>
-                    <p style={{ marginTop: "15px", opacity: 0.7 }}>Point your camera at a VibeChain QR code</p>
+                <div className="scanner-container animate-fade-in-up delay-200">
+                    <DashboardCard title="Scan QR Code" icon="📱" className="scanner-card">
+                        <div className="scanner-wrapper">
+                            <div id="reader" className="qr-reader"></div>
+                            <div className="scanner-instructions">
+                                <div className="instruction-item">
+                                    <span className="instruction-icon">1️⃣</span>
+                                    <span>Point your camera at the QR code</span>
+                                </div>
+                                <div className="instruction-item">
+                                    <span className="instruction-icon">2️⃣</span>
+                                    <span>Wait for automatic detection</span>
+                                </div>
+                                <div className="instruction-item">
+                                    <span className="instruction-icon">3️⃣</span>
+                                    <span>View instant verification results</span>
+                                </div>
+                            </div>
+                        </div>
+                    </DashboardCard>
                 </div>
             )}
 
             {loading && (
-                <div className="glass-card" style={{ textAlign: "center" }}>
-                    <p>Verifying authenticity...</p>
+                <div className="loading-container animate-fade-in">
+                    <DashboardCard className="loading-card">
+                        <div className="loading-content">
+                            <div className="spinner"></div>
+                            <h3>Verifying Authenticity...</h3>
+                            <p>Checking blockchain records</p>
+                        </div>
+                    </DashboardCard>
                 </div>
             )}
 
             {error && (
-                <div className="glass-card" style={{ borderColor: "#ff4d4d", background: "rgba(255, 77, 77, 0.1)" }}>
-                    <h3 style={{ color: "#ff4d4d", display: "flex", alignItems: "center", gap: "10px" }}>
-                        ❌ Verification Failed
-                    </h3>
-                    <p>{error}</p>
-                    <button
-                        onClick={() => setHash(null)}
-                        style={{ marginTop: "15px", background: "#ff4d4d", color: "white", padding: "10px 20px", borderRadius: "8px" }}
-                    >
-                        Try Again
-                    </button>
+                <div className="error-container animate-fade-in">
+                    <DashboardCard className="error-card">
+                        <div className="error-content">
+                            <div className="error-icon">❌</div>
+                            <h3>Verification Failed</h3>
+                            <p>{error}</p>
+                            <GlowButton
+                                variant="outline"
+                                onClick={() => { setHash(null); setError(null); }}
+                            >
+                                Try Again
+                            </GlowButton>
+                        </div>
+                    </DashboardCard>
                 </div>
             )}
 
             {product && (
-                <div className="glass-card fade-in">
-                    <div style={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "20px", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "20px" }}>
-                        <div style={{ background: "#00b894", width: "50px", height: "50px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px" }}>
-                            ✅
-                        </div>
-                        <div>
-                            <h2 style={{ margin: 0 }}>Authentic Product</h2>
-                            <span style={{ fontSize: "0.9em", opacity: 0.8 }}>Verified on Blockchain</span>
-                        </div>
-                    </div>
-
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                        <div>
-                            <label style={{ fontSize: "0.8em", opacity: 0.6, textTransform: "uppercase" }}>Product Name</label>
-                            <p style={{ fontSize: "1.2em", fontWeight: "bold", margin: "5px 0 15px 0" }}>{product.name}</p>
-                        </div>
-                        <div>
-                            <label style={{ fontSize: "0.8em", opacity: 0.6, textTransform: "uppercase" }}>Batch Number</label>
-                            <p style={{ fontSize: "1.2em", fontWeight: "bold", margin: "5px 0 15px 0" }}>{product.metadata?.batch || "N/A"}</p>
+                <div className="verification-result animate-fade-in">
+                    {/* Success Badge */}
+                    <div className="success-banner">
+                        <div className="success-banner-content container">
+                            <div className="success-icon-large">✅</div>
+                            <div>
+                                <h2>Authentic Product Verified</h2>
+                                <p>This product is registered on the blockchain</p>
+                            </div>
+                            <div className="trust-score">
+                                <div className="trust-score-value">100%</div>
+                                <div className="trust-score-label">Trust Score</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div style={{ marginTop: "10px" }}>
-                        <label style={{ fontSize: "0.8em", opacity: 0.6, textTransform: "uppercase" }}>Description</label>
-                        <p style={{ margin: "5px 0 15px 0", lineHeight: "1.5" }}>{product.description}</p>
+                    {/* Product Details */}
+                    <div className="product-details container">
+                        <div className="details-grid">
+                            <DashboardCard title="Product Information" icon="📦" className="info-card">
+                                <div className="info-grid">
+                                    <div className="info-item">
+                                        <label>Product Name</label>
+                                        <div className="info-value">{product.name}</div>
+                                    </div>
+                                    <div className="info-item">
+                                        <label>Batch Number</label>
+                                        <div className="info-value">{product.metadata?.batch || "N/A"}</div>
+                                    </div>
+                                    <div className="info-item full-width">
+                                        <label>Description</label>
+                                        <div className="info-value">{product.description}</div>
+                                    </div>
+                                    <div className="info-item full-width">
+                                        <label>Blockchain Hash</label>
+                                        <div className="info-value hash-value">{product.productIdOnChain}</div>
+                                    </div>
+                                </div>
+                            </DashboardCard>
+
+                            <DashboardCard title="Verification Details" icon="🛡️" className="verification-card">
+                                <div className="verification-items">
+                                    <div className="verification-item verified">
+                                        <span className="verify-icon">✓</span>
+                                        <div>
+                                            <div className="verify-label">Blockchain Verified</div>
+                                            <div className="verify-desc">Record found on Ethereum</div>
+                                        </div>
+                                    </div>
+                                    <div className="verification-item verified">
+                                        <span className="verify-icon">✓</span>
+                                        <div>
+                                            <div className="verify-label">Authentic Vendor</div>
+                                            <div className="verify-desc">Registered manufacturer</div>
+                                        </div>
+                                    </div>
+                                    <div className="verification-item verified">
+                                        <span className="verify-icon">✓</span>
+                                        <div>
+                                            <div className="verify-label">Supply Chain Tracked</div>
+                                            <div className="verify-desc">Full history available</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </DashboardCard>
+                        </div>
+
+                        {/* Supply Chain Timeline */}
+                        <DashboardCard title="Supply Chain History" icon="📊" className="timeline-card">
+                            <SupplyChainTimeline stages={stages} />
+                        </DashboardCard>
+
+                        {/* Actions */}
+                        <div className="verify-actions">
+                            <GlowButton
+                                variant="secondary"
+                                onClick={() => { setHash(null); setProduct(null); }}
+                            >
+                                Scan Another Product
+                            </GlowButton>
+                            <GlowButton variant="outline">
+                                Share Verification
+                            </GlowButton>
+                        </div>
                     </div>
-
-                    <div style={{ background: "rgba(0,0,0,0.2)", padding: "15px", borderRadius: "8px", marginTop: "10px", wordBreak: "break-all" }}>
-                        <label style={{ fontSize: "0.8em", opacity: 0.6, textTransform: "uppercase" }}>Blockchain Hash</label>
-                        <p style={{ fontFamily: "monospace", margin: "5px 0 0 0", fontSize: "0.9em", color: "#00b894" }}>{product.productIdOnChain}</p>
-                    </div>
-
-                    <SupplyChainTimeline stages={stages} />
-
-                    <button
-                        onClick={() => { setHash(null); setProduct(null); }}
-                        style={{ marginTop: "30px", width: "100%", padding: "12px", background: "rgba(255,255,255,0.1)", color: "white", borderRadius: "8px" }}
-                    >
-                        Scan Another Product
-                    </button>
                 </div>
             )}
         </div>

@@ -1,5 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import "./Navbar.css";
 
 export default function Navbar() {
     const location = useLocation();
@@ -11,15 +13,15 @@ export default function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link to="/" className="navbar-brand">
-                    <span className="brand-icon">🔗</span>
-                    <span className="brand-name">VibeChain</span>
+                    <span className="brand-logo">VibeChain</span>
                 </Link>
 
                 <button
                     className="mobile-menu-toggle"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label="Toggle menu"
                 >
-                    {mobileMenuOpen ? "✕" : "☰"}
+                    {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
 
                 <div className={`navbar-links ${mobileMenuOpen ? "mobile-open" : ""}`}>
@@ -53,10 +55,10 @@ export default function Navbar() {
                     </Link>
                     <Link
                         to="/dashboard"
-                        className="nav-link btn-nav"
+                        className="btn btn-primary btn-sm"
                         onClick={() => setMobileMenuOpen(false)}
                     >
-                        Dashboard →
+                        Dashboard
                     </Link>
                 </div>
             </div>
